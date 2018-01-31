@@ -21,7 +21,7 @@ device_circ <- read.csv("device_circ.csv.gz")
 
 activity <- read.csv("activity.csv.gz")
 activity_intensity <- read.csv("activity_intensity.csv")
-activity_type <- read.csv("activity_intensity.csv")
+activity_type <- read.csv("activity_type.csv")
 
 food <- read.csv("food_tag_log.csv.gz")
 
