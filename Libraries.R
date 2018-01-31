@@ -1,6 +1,5 @@
-install.packages(c("plyr", "lattice", "lubridate", "sqldf", "DataCombine", "ggplot2", "doBy", "reshape", "reshape2", "data.table", "pROC", "zoo", "smbinning", "woe", "caret", "dplyr"
-, "car", "scales", "gridExtra", "vcd", "JM", "latticeExtra", "hexbin")
-
+#install.packages(c("plyr", "lattice", "lubridate", "sqldf", "DataCombine", "ggplot2", "doBy", "reshape", "reshape2", "data.table", "pROC", "zoo", "smbinning", "woe", "caret", "dplyr", "car",
+#"scales", "gridExtra", "vcd", "JM", "latticeExtra", "hexbin"))
 library(plyr)
 library(lattice)
 library(lubridate)

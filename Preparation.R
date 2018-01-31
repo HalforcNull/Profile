@@ -1,5 +1,5 @@
-# setwd not work on server side
-# setwd(...)
+#setwd not work on server side
+#setwd("C:/Sanford Profile")
 
 
 ###########################################################################################
@@ -12,23 +12,23 @@ source("Libraries.R")
 
 ## to read data in:
 
-userinfo <- read.csv("userinfo.csv")
+userinfo <- read.csv("userinfo.csv", quote="")
 
-userinfo_notes <- read.csv("userinfo_notes.csv")
+userinfo_notes <- read.csv("userinfo_notes.csv", quote="")
 
-device_weight <- read.csv("device_weight.csv")
+device_weight <- read.csv("device_weight.csv", quote="")
 
-device_circ <- read.csv("device_circ.csv")							
+device_circ <- read.csv("device_circ.csv", quote="")							
 
-activity <- read.csv("activity.csv")
-activity_intensity <- read.csv("activity_intensity.csv")
-activity_type <- read.csv("activity_type.csv")
+activity <- read.csv("activity.csv", quote="")
+activity_intensity <- read.csv("activity_intensity.csv", quote="")
+activity_type <- read.csv("activity_type.csv", quote="")
 
-food <- read.csv("food_tag_log.csv")
+food <- read.csv("food_tag_log.csv", quote="")
 
-meds <- read.csv("user_medications.csv")
+meds <- read.csv("user_medications.csv", quote="")
 
-plans <- read.csv("plans.csv")		
+plans <- read.csv("plans.csv", quote="")		
 
 					
 ###########################################################################################
