@@ -13,23 +13,34 @@ source("Libraries.R")
 ## to read data in:
 
 userinfo <- read.csv("userinfo.csv", quote="")
+cat("userinfo.csv load successfully")
 
-userinfo_notes <- read.csv("userinfo_notes.csv", quote="")
+userinfo_notes <- read.csv("userinfo_notes.csv", quote="", row.names = NULL)
+cat("userinfo_notes.csv load successfully")
 
 device_weight <- read.csv("device_weight.csv", quote="")
+cat("device_weight.csv load successfully")
 
 device_circ <- read.csv("device_circ.csv", quote="")							
+cat("device_circ.csv load successfully")
 
 activity <- read.csv("activity.csv", quote="")
+cat("activity.csv load successfully")
+
 activity_intensity <- read.csv("activity_intensity.csv", quote="")
+cat("activity_intensity.csv load successfully")
+
 activity_type <- read.csv("activity_type.csv", quote="")
+cat("activity_type.csv load successfully")
 
 food <- read.csv("food_tag_log.csv", quote="")
+cat("food_tag_log.csv load successfully")
 
 meds <- read.csv("user_medications.csv", quote="")
+cat("user_medications.csv load successfully")
 
 plans <- read.csv("plans.csv", quote="")		
-
+cat("plans.csv load successfully")
 					
 ###########################################################################################
 
