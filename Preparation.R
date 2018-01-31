@@ -11,23 +11,23 @@ source("Libraries.R")
 
 ## to read data in:
 
-userinfo <- read.csv("userinfo.csv.gz")
+userinfo <- read.csv("userinfo.csv")
 
-userinfo_notes <- read.csv("userinfo_notes.csv.gz")
+userinfo_notes <- read.csv("userinfo_notes.csv")
 
-device_weight <- read.csv("device_weight.csv.gz")
+device_weight <- read.csv("device_weight.csv")
 
-device_circ <- read.csv("device_circ.csv.gz")							
+device_circ <- read.csv("device_circ.csv")							
 
-activity <- read.csv("activity.csv.gz")
+activity <- read.csv("activity.csv")
 activity_intensity <- read.csv("activity_intensity.csv")
 activity_type <- read.csv("activity_type.csv")
 
-food <- read.csv("food_tag_log.csv.gz")
+food <- read.csv("food_tag_log.csv")
 
-meds <- read.csv("user_medications.csv.gz")
+meds <- read.csv("user_medications.csv")
 
-plans <- read.csv("plans.csv.gz")		
+plans <- read.csv("plans.csv")		
 
 					
 ###########################################################################################
