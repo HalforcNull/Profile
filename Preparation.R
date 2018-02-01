@@ -12,35 +12,39 @@ source("Libraries.R")
 
 ## to read data in:
 
-userinfo <- read.csv("userinfo.csv", quote="")
-cat("userinfo.csv load successfully")
+listOfVars <- list()
+if(!(   'userinfo' %in% listOfVars &&
+        'userinfo_notes' %in% listOfVars &&
+        'device_circ' %in% listOfVars &&
+		'activity' %in% listOfVars &&
+		'activity_intensity' %in% listOfVars &&
+		'activity_type' %in% listOfVars &&
+		'food' %in% listOfVars &&
+		'meds' %in% listOfVars &&
+        'plans' %in% listOfVars) )
+{
+    cat('Data required to run Preparation.R is missing')
+}
 
-userinfo_notes <- read.csv("userinfo_notes.csv", quote="", row.names = NULL)
-cat("userinfo_notes.csv load successfully")
-
-device_weight <- read.csv("device_weight.csv", quote="")
-cat("device_weight.csv load successfully")
-
-device_circ <- read.csv("device_circ.csv", quote="")							
-cat("device_circ.csv load successfully")
-
-activity <- read.csv("activity.csv", quote="")
-cat("activity.csv load successfully")
-
-activity_intensity <- read.csv("activity_intensity.csv", quote="")
-cat("activity_intensity.csv load successfully")
-
-activity_type <- read.csv("activity_type.csv", quote="")
-cat("activity_type.csv load successfully")
-
-food <- read.csv("food_tag_log.csv", quote="")
-cat("food_tag_log.csv load successfully")
-
-meds <- read.csv("user_medications.csv", quote="")
-cat("user_medications.csv load successfully")
-
-plans <- read.csv("plans.csv", quote="")		
-cat("plans.csv load successfully")
+#userinfo <- read.csv("userinfo.csv", quote="")
+#
+#userinfo_notes <- read.csv("userinfo_notes.csv", quote="", row.names = NULL)
+#
+#device_weight <- read.csv("device_weight.csv", quote="")
+#
+#device_circ <- read.csv("device_circ.csv", quote="")							
+#
+#activity <- read.csv("activity.csv", quote="")
+#
+#activity_intensity <- read.csv("activity_intensity.csv", quote="")
+#
+#activity_type <- read.csv("activity_type.csv", quote="")
+#
+#food <- read.csv("food_tag_log.csv", quote="")
+#
+#meds <- read.csv("user_medications.csv", quote="")
+#
+#plans <- read.csv("plans.csv", quote="", row.names = NULL)		
 					
 ###########################################################################################
 
