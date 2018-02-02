@@ -12,10 +12,11 @@ source("Libraries.R")
 
 ## to read data in:
 
-listOfVars <- list()
+listOfVars <- ls()
 if(!(   'userinfo' %in% listOfVars &&
         'userinfo_notes' %in% listOfVars &&
-        'device_circ' %in% listOfVars &&
+        'device_weight' %in% listOfVars &&
+		'device_circ' %in% listOfVars &&
 		'activity' %in% listOfVars &&
 		'activity_intensity' %in% listOfVars &&
 		'activity_type' %in% listOfVars &&
