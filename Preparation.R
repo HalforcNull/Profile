@@ -152,7 +152,7 @@ colnames(med)[c(2,3)] <- c("weight","MonthlyRecordings")
 ## Get starting date by first recorded weight
 	## grab the first recorded weight for each user id (subquery) and join it 
 	##  onto the userinfo table which is subset by the WHERE criterion			
-first_weight <- sqldf("	SELECT a.id, a.zip, a.email, a.employer, a.occupation
+first_weight <- sqldf("	SELECT a.id, a.zip, a.employer 
 								, a.birthdate, a.marital_status, a.gender, a.height, a.goal_weight, a.or_coach_id
 								, a.homestore
 								, b.weight as first_weight, b.first_date
@@ -388,7 +388,7 @@ data06$med_asthma <- ifelse(is.na(data06$med_asthma)==1, 0, ifelse(data06$med_as
 data06$med_aspirin <- ifelse(is.na(data06$med_aspirin)==1, 0, ifelse(data06$med_aspirin>0, 1, 0))
 data06$med_bloodthinner <- ifelse(is.na(data06$med_bloodthinner)==1, 0, ifelse(data06$med_bloodthinner>0, 1, 0))
 
-rm(meds01,meds02)
+rm(meds02)
 
 
 ###########################################################################################
@@ -648,6 +648,7 @@ data08 <- merge(data08, med_cnt, by.x=c("id"), by.y=c("user_id"), all.x=TRUE )
 
 data08$med_indicator <- ifelse(is.na(data08$med_total)==0, 1, 0)
 
+rm(meds01)
 
 ###########################################################################################
 
