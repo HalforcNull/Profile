@@ -14,12 +14,12 @@ con <- dbConnect(MySQL(),
     password = DB_PASSWORD,
     host = DB_HOSTNAME,
     dbname= DB_SCHEMA)
-    
+   
      
 options(sqldf.driver = "SQLite") 
 
 userinfo <- dbGetQuery(conn = con, statement = 
-                "SELECT id, city, state, zip, age, marital_status, employer, is_deleted, is_new, devices_user_id, currenttoken, 
+                "SELECT id, city, state, zip, birthdate, marital_status, employer, is_deleted, is_new, devices_user_id, currenttoken, 
                         comments_message, gender, height, goal_weight, sap_num, referred_by, start_weight, start_bp_sys, start_bp_dia,
                         highest_weight, lowest_weight, member_since, a.date_added as date_added, a.date_modified as date_modified, or_coach_id, store_id, bmr, 
                         last_login, promo_code, physician_referral, other_referral, is_first_time, is_coach, is_verified, emr_patient_no,
@@ -97,5 +97,17 @@ plans <- dbGetQuery(conn = con, statement =
 
 cat('plans has been loaded. \r\n')
 
-dbDisconnect(con) 
+dbDisconnect(con)  
+
+DBRaw_userinfo = userinfo
+DBRaw_userinfo_notes = userinfo_notes
+DBRaw_device_weight = device_weight
+DBRaw_device_circ = device_circ
+DBRaw_activity = activity
+DBRaw_activity_intensity = activity_intensity
+DBRaw_activity_type = activity_type
+DBRaw_food = food
+DBRaw_meds = meds
+DBRaw_plans = plans
+
 
