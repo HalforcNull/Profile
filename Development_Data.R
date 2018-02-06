@@ -1,7 +1,7 @@
 
 ##### development data will be month 1 june 2014 to may 2015 -- through month 12 to april 2016 #####
 ##### hold out data will be  May of 2016    #####
-setwd(...)
+
 
 # load libraries
 source("libraries.R")

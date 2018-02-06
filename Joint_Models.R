@@ -1,4 +1,3 @@
-setwd(...)
 
 ## load libraries
 library(JM)
