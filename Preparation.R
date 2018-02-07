@@ -50,7 +50,7 @@ if(!(   'userinfo' %in% listOfVars &&
 ###########################################################################################
 
 ## Create a monthly row for every month after their start date
-dates <- as.data.frame(seq(from=as.Date('2014-05-01'), to=as.Date('2016-05-01'), by="month"), optional=TRUE)
+dates <- as.data.frame(seq(from=as.Date('2014-05-01'), to=as.Date('2018-02-01'), by="month"), optional=TRUE)
 colnames(dates)<-"dates"
 
 
