@@ -4,15 +4,15 @@
 
 
 # load libraries
-source("libraries.R")
+source("Libraries.R")
 
 # read data in
 data09 <- read.csv("data09.csv.gz")
 
 
 #only those IDs from 6/2014 through 5/2015
-uid <- unique(data09[which(as.Date(data09$dates)>="2014-06-01" & as.Date(data09$dates)<="2015-05-01" & data09$months==1),]$id)
-tmp_data09 <- data09[which(data09$id %in% uid & as.Date(data09$dates)<="2016-04-01"),]
+uid <- unique(data09[which(as.Date(data09$dates)>="2014-06-01" & as.Date(data09$dates)<="2018-05-01" & data09$months==1),]$id)
+tmp_data09 <- data09[which(data09$id %in% uid & as.Date(data09$dates)<="2018-04-01"),]
 
 
 # table(as.Date(data09$dates))
@@ -153,7 +153,7 @@ temp0f <- transform(temp0e, prev_pct_WL_cum = ave(prev_pct_WL_cum, id, FUN = na.
 
 
 ##   censor if end of dev data - feb 2016  ##
-temp0f$censor <- with(temp0f, ifelse(as.Date(temp0f$dates)=="2016-04-01",1,0)) 
+temp0f$censor <- with(temp0f, ifelse(as.Date(temp0f$dates)=="2018-04-01",1,0)) 
 
 
 
@@ -427,7 +427,7 @@ system("gzip surv_val.csv")
 
 #only those IDs from 2015-05-01 through 2016-05-01
 #if dates are older than this, the members won't reach month 12 in may and they don't matter anyway
-uid <- unique(data09[which(as.Date(data09$dates)>=as.Date("2015-05-01") & as.Date(data09$dates)<=as.Date("2016-05-01") & data09$months==1),]$id)
+uid <- unique(data09[which(as.Date(data09$dates)>=as.Date("2015-05-01") & as.Date(data09$dates)<=as.Date("2018-05-01") & data09$months==1),]$id)
 tmp_data09 <- data09[which(data09$id %in% uid & as.Date(data09$dates)<=as.Date("2016-05-01")),]
 
 #grab everyone from month 1-12 and only those that start as overweight or obese 
@@ -564,7 +564,7 @@ dat_may <- temp2
 
 
 #extract unique IDs for those that are active in the last month of the apply data
-uid_may <- unique(dat_may[which(as.Date(dat_may$dates)=="2016-04-01" & dat_may$miss==0),]$id)
+uid_may <- unique(dat_may[which(as.Date(dat_may$dates)=="2018-04-01" & dat_may$miss==0),]$id)
 
 
 dat_val_may <- dat_may[which(dat_may$id %in% uid_may),]

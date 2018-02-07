@@ -6,7 +6,7 @@ source("Libraries.R")
 surv_dev <- read.csv("surv_dev.csv.gz")
 surv_val <- read.csv("surv_val.csv.gz")
 
-
+dat_long_dev <- dat_long
 
 
 
@@ -363,13 +363,13 @@ save(survFit04, file="survFit04.rda")
 ## ACCURACY ##
 
 ## read in data
-long_dev <- read.csv("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/data/long_dev.csv.gz")
-surv_dev <- read.csv("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/data/surv_dev.csv.gz")
+long_dev <- read.csv("long_dev.csv.gz")
+surv_dev <- read.csv("surv_dev.csv.gz")
 
-long_val <- read.csv("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/data/long_val.csv.gz")
-surv_val <- read.csv("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/data/surv_val.csv.gz")
+long_val <- read.csv("long_val.csv.gz")
+surv_val <- read.csv("surv_val.csv.gz")
 
-dat_val_may <- read.csv("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/data/dat_val_may.csv.gz")
+dat_val_may <- read.csv("dat_val_may.csv.gz")
 
 
 
@@ -386,8 +386,8 @@ validation <- surv_dev
 development <- long_val
 validation <- surv_val
 
-development <- dat_val_may[which(dat_val_may$dates=="2016-04-01" & is.na(dat_val_may$pct_WL_mo)==0),]
-validation <- dat_val_may[which(dat_val_may$dates=="2016-05-01"),]
+development <- dat_val_may[which(dat_val_may$dates=="2018-04-01" & is.na(dat_val_may$pct_WL_mo)==0),]
+validation <- dat_val_may[which(dat_val_may$dates=="2018-05-01"),]
 
 	fit04 <- NULL
 		for(start in 1:11){

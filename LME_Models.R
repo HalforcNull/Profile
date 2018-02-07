@@ -175,7 +175,7 @@ ApplyModel.Plot <- function(model, printimage="yes"){
 					legend.position="bottom",
 					plot.title = element_text(size=18, face="bold", hjust=0.5))
 
-		png(paste0("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/images/longitudinal/",model,".png"), width=20, height=8, units='in', res=300)	
+		png(paste0("longitudinal/",model,".png"), width=20, height=8, units='in', res=300)	
 			grid.arrange(graph1, graph2, ncol=2)	
 		dev.off()	
 		
@@ -237,11 +237,11 @@ ApplyModel.Plot_all <- function(model, printimage="yes"){
 	
 	
 	#apply the model - only to the  month of may
-	pred.may <- as.data.frame(predict(eval(parse(text=model)), newdata=dat_val_may[which(as.Date(dat_val_may$dates)=="2016-05-01"),], level=0, returnData=TRUE))
+	pred.may <- as.data.frame(predict(eval(parse(text=model)), newdata=dat_val_may[which(as.Date(dat_val_may$dates)=="2018-05-01"),], level=0, returnData=TRUE))
 	colnames(pred.may) <- "predict.fixed"
 	
 		#combine data with prediction
-	newpred.may <- cbind(dat_val_may[which(as.Date(dat_val_may$dates)=="2016-05-01"),],pred.may)
+	newpred.may <- cbind(dat_val_may[which(as.Date(dat_val_may$dates)=="2018-05-01"),],pred.may)
 
 	#remove missing actual values - pct_WL_mo
 	newpred.may2 <- newpred.may[which(is.na(newpred.may$pct_WL_mo)==0) ,]
@@ -333,7 +333,7 @@ ApplyModel.Plot_all <- function(model, printimage="yes"){
 					plot.title = element_text(size=18, face="bold", hjust=0.5))
 		
 		#all six graphs together	
-		png(paste0("C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/images/longitudinal/",model,"_all.png"), width=20, height=8, units='in', res=300)	
+		png(paste0("longitudinal/",model,"_all.png"), width=20, height=8, units='in', res=300)	
 			grid.arrange(graph1, graph2, graph3, ncol=3)	
 		dev.off()	
 		
@@ -773,7 +773,7 @@ colnames(fixed) <- c("Months","Actual","Model 1", "Model 2", "Model 3")
 	
 fixed2 <- melt(fixed, id="Months") 
 	
-png('C:/Users/Valerie/Google Drive/SDSU/Dissertation/Profile/JointModel/images/lme123.png',width=6, height=5, units='in', res=300)
+png('lme123.png',width=6, height=5, units='in', res=300)
 	ggplot(fixed2, aes(x=Months, y=value, colour=variable)) + 
 		geom_line(size=1.5, aes(color=variable, group=variable)) +	
 		geom_point(size=1.5, shape=21, fill="white") +

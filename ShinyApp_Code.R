@@ -14,7 +14,7 @@ dat_val_may <- dat_val_may[,c("id","months","dates","s","gender","age","marital_
                                       ,"med_indicator","med_total","start_bmi","prev_pct_WL_cum","prev_note_count","prev_MonthlyRecordings"
                               ,"pct_WL_mo")]
 
-dat_val_may1 <- dat_val_may[which(is.na(dat_val_may$pct_WL_mo)==0 & as.Date(dat_val_may$dates)<"2016-05-01"),] 
+dat_val_may1 <- dat_val_may[which(is.na(dat_val_may$pct_WL_mo)==0 & as.Date(dat_val_may$dates)<"2018-05-01"),] 
 
 data09a <- read.csv("data09a.csv.gz")
 
