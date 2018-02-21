@@ -97,17 +97,17 @@ plans <- dbGetQuery(conn = con, statement =
 
 cat('plans has been loaded. \r\n')
 
+
+
+DBRaw_userinfo <- userinfo
+DBRaw_userinfo_notes <- userinfo_notes
+DBRaw_device_weight <- device_weight
+DBRaw_device_circ <- device_circ
+DBRaw_activity <- activity
+DBRaw_activity_intensity <- activity_intensity
+DBRaw_activity_type <- activity_type
+DBRaw_food <- food
+DBRaw_meds <- meds
+DBRaw_plans <- plans
+
 dbDisconnect(con)  
-
-DBRaw_userinfo = userinfo
-DBRaw_userinfo_notes = userinfo_notes
-DBRaw_device_weight = device_weight
-DBRaw_device_circ = device_circ
-DBRaw_activity = activity
-DBRaw_activity_intensity = activity_intensity
-DBRaw_activity_type = activity_type
-DBRaw_food = food
-DBRaw_meds = meds
-DBRaw_plans = plans
-
-

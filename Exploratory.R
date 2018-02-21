@@ -50,7 +50,7 @@ nrow(clean_weight[which(clean_weight$weight>=150 & clean_weight$weight<=200),])
 #hourly recordings
 table(clean_weight2[which(clean_weight2$date_recorded>='2014-05-01'),"weight_hour"])
 nrow(clean_weight2)
-(nrow(clean_weight2[which(clean_weight2$date_recorded>='2014-05-01' & clean_weight2$weight_hour=="06")),]) / nrow(clean_weight2)) * 100
+(nrow(clean_weight2[which(clean_weight2$date_recorded>='2014-05-01' & clean_weight2$weight_hour=="06"),]) / nrow(clean_weight2)) * 100
 (nrow(clean_weight2[which(clean_weight2$date_recorded>='2014-05-01' & clean_weight2$weight_hour %in% c("05","06","07","08","09")),]) / nrow(clean_weight2)) * 100
 
 

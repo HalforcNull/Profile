@@ -197,6 +197,10 @@ weight02$MonthlyRecordings <- ifelse(is.na(weight02$MonthlyRecordings)==1, 0, we
 
 data01 <- weight02
 
+
+write.csv(clean_weight, "clean_device_weight.csv", row.names = FALSE)
+system("gzip clean_device_weight.csv")
+
 rm(clean_weight,med,first_weight,weight01,weight02)
 
 
@@ -677,6 +681,17 @@ data09 <- temp1[order(temp1$id, temp1$months),]
 
 write.csv(data09, "data09.csv", row.names=FALSE)
 system("gzip data09.csv")
+
+
+###########################################################################################
+
+
+###########################################################################################
+
+write.csv(device_weight, "device_weight.csv", row.names = FALSE)
+system("gzip device_weight.csv")
+
+
 
 
 ###########################################################################################

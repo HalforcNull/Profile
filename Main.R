@@ -38,7 +38,11 @@ system("mv data09.csv.gz data09.csv.bak.gz")
 
 source('Preparation.R')
 
+cat('Raw data process is done\r\n')
 
+source('Development_Data.R')
+
+source('LME_Models.R')
 
 
 
