@@ -1,0 +1,78 @@
+---
+title: "Data Overview"
+author: "Runan Yao"
+date: "February 21, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source('Libraries.R')
+#detach("package:RMySQL", unload=TRUE)
+```
+
+```{r echo=FALSE}
+# Load Data
+setwd("C:/GitRepo/Profile")
+data <- read.csv("data08.csv.gz")
+```
+
+# Summarize
+```{r echo=FALSE,results="hide"}
+distinctId <- sqldf("SELECT DISTINCT id FROM data")
+```
+we have `r count(data)` weight records from `r count(distinctId)` user.
+
+# Data Missing/Incorrect Analyze
+##1. Brithday Incorrect
+```{r echo=FALSE}
+#all <- sqldf("SELECT DISTINCT id FROM data")
+tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE birthdate < '1918-01-01' or birthdate > '2018-01-01'")
+```
+`r count(tmp1)/count(distinctId)`% of user have incorrect brithdate.
+
+Can a normal user register the account/membership without having a reasonable brithday?
+
+        If yes, how we deal with their brithdate data? (default value? NULL?)
+        
+        If no, why we have so many incorrect brithdate data in DB.
+```{r echo=FALSE}
+rm(tmp1)
+```
+
+##2. First Weight Incorrect
+```{r echo=FALSE}
+tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE ( first_weight < 10 or first_weight > 1000 )") # incorrect first weight records
+tmp2 <- sqldf("SELECT DISTINCT id FROM data WHERE ( first_weight > 10 and first_weight < 1000 )") # correct first weight records
+tmp3 <- sqldf("SELECT id FROM tmp1 WHERE id not in tmp2")
+
+```
+`r count(tmp3)/count(distinctId)`% of user have incorrect first weight.
+Great. Each user has at least one record with first weight in.
+```{r echo=FALSE}
+rm(tmp1, tmp2, tmp3)
+```
+
+##3. Gender
+```{r echo=FALSE}
+tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE ( gender is not 'male' or gender is not 'female' )")
+tmp2 <- sqldf("SELECT DISTINCT id FROM data WHERE gender is 'male'")
+tmp3 <- sqldf("SELECT DISTINCT id FROM data WHERE gender is 'female'")
+tmp4 <- sqldf("SELECT id FROM tmp1 WHERE ( id not in tmp2 and id not in tmp3 )")
+tmp5 <- sqldf("SELECT id FROM tmp2 WHERE id in tmp3")
+```
+`r count(tmp4)/count(distinctId)`% of user has no gender data. `r count(tmp5)/count(distinctId)`% of user have both male and female show in data base.
+        
+##3. Weight record date missing
+```{r echo=FALSE}
+tmp2 <- sqldf("SELECT count(*) FROM data WHERE dates > '1918-01-01' and dates < '2018-01-01'")
+```
+`r tmp2/count(data)`% of records contains weight data.
+
+MISSING COMMENT HERE.
+
+
+
+
+
+
