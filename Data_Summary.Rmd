@@ -7,6 +7,10 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r echo=FALSE}
 source('Libraries.R')
 #detach("package:RMySQL", unload=TRUE)
 ```
@@ -24,7 +28,7 @@ distinctId <- sqldf("SELECT DISTINCT id FROM data")
 we have `r count(data)` weight records from `r count(distinctId)` user.
 
 # Data Missing/Incorrect Analyze
-##1. Brithday Incorrect
+##1. Brithday
 ```{r echo=FALSE}
 #all <- sqldf("SELECT DISTINCT id FROM data")
 tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE birthdate < '1918-01-01' or birthdate > '2018-01-01'")
@@ -40,10 +44,25 @@ Can a normal user register the account/membership without having a reasonable br
 rm(tmp1)
 ```
 
-##2. First Weight Incorrect
+##2. Gender
 ```{r echo=FALSE}
-tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE ( first_weight < 10 or first_weight > 1000 )") # incorrect first weight records
-tmp2 <- sqldf("SELECT DISTINCT id FROM data WHERE ( first_weight > 10 and first_weight < 1000 )") # correct first weight records
+tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE ( gender is not 'male' or gender is not 'female' )")
+tmp2 <- sqldf("SELECT DISTINCT id FROM data WHERE gender is 'male'")
+tmp3 <- sqldf("SELECT DISTINCT id FROM data WHERE gender is 'female'")
+tmp4 <- sqldf("SELECT id FROM tmp1 WHERE ( id not in tmp2 and id not in tmp3 )")
+tmp5 <- sqldf("SELECT id FROM tmp2 WHERE id in tmp3")
+```
+`r count(tmp4)/count(distinctId)`% of user has no gender data. `r count(tmp5)/count(distinctId)`% of user have both male and female show in data base.
+
+```{r}
+rm(tmp1, tmp2, tmp3, tmp4, tmp5)
+```
+
+
+##3. First Weight
+```{r echo=FALSE}
+tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE ( first_weight < 10 or first_weight > 500 )") # incorrect first weight records
+tmp2 <- sqldf("SELECT DISTINCT id FROM data WHERE ( first_weight > 10 and first_weight < 500 )") # correct first weight records
 tmp3 <- sqldf("SELECT id FROM tmp1 WHERE id not in tmp2")
 
 ```
@@ -53,17 +72,21 @@ Great. Each user has at least one record with first weight in.
 rm(tmp1, tmp2, tmp3)
 ```
 
-##3. Gender
-```{r echo=FALSE}
-tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE ( gender is not 'male' or gender is not 'female' )")
-tmp2 <- sqldf("SELECT DISTINCT id FROM data WHERE gender is 'male'")
-tmp3 <- sqldf("SELECT DISTINCT id FROM data WHERE gender is 'female'")
-tmp4 <- sqldf("SELECT id FROM tmp1 WHERE ( id not in tmp2 and id not in tmp3 )")
-tmp5 <- sqldf("SELECT id FROM tmp2 WHERE id in tmp3")
+##4. Expected Weight
+```{r echo=TRUE}
+tmp1 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight) as expected_weight_loss FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight GROUP BY id ")
+max(tmp1$goal_weight)
+min(tmp1$goal_weight)
+hist(tmp1$goal_weight,  breaks = seq(0,500, by = 10))
+hist(tmp1$expected_weight_loss , breaks = seq(0, 500, by = 10))
 ```
-`r count(tmp4)/count(distinctId)`% of user has no gender data. `r count(tmp5)/count(distinctId)`% of user have both male and female show in data base.
+
+`r (count(distinctId) - count(tmp1))/count(distinctId)`% of user have incorrect goal weight or first weight.
+
+
+Some of the goal weight data is not reasonable. Do we have any requirement on the 'goal weight' when member join into the program?
         
-##3. Weight record date missing
+##5. Weight record
 ```{r echo=FALSE}
 tmp2 <- sqldf("SELECT count(*) FROM data WHERE dates > '1918-01-01' and dates < '2018-01-01'")
 ```
