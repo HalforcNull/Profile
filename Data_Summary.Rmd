@@ -31,7 +31,7 @@ we have `r count(data)` weight records from `r count(distinctId)` user.
 ##1. Brithday
 ```{r echo=FALSE}
 #all <- sqldf("SELECT DISTINCT id FROM data")
-tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE birthdate < '1918-01-01' or birthdate > '2018-01-01'")
+tmp1 <- sqldf("SELECT DISTINCT id FROM data WHERE birthdate < '1918-01-01' or birthdate > '2018-02-22'")
 ```
 `r count(tmp1)/count(distinctId)`% of user have incorrect brithdate.
 
@@ -67,35 +67,114 @@ tmp3 <- sqldf("SELECT id FROM tmp1 WHERE id not in tmp2")
 
 ```
 `r count(tmp3)/count(distinctId)`% of user have incorrect first weight.
-Great. Each user has at least one record with first weight in.
+
 ```{r echo=FALSE}
 rm(tmp1, tmp2, tmp3)
 ```
 
-##4. Expected Weight
+##4. Expected Weight 
 ```{r echo=TRUE}
 tmp1 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight) as expected_weight_loss FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight GROUP BY id ")
+
 max(tmp1$goal_weight)
 min(tmp1$goal_weight)
 hist(tmp1$goal_weight,  breaks = seq(0,500, by = 10))
 hist(tmp1$expected_weight_loss , breaks = seq(0, 500, by = 10))
+
+
+tmp2 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight)/first_weight as expected_weight_loss_rate FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight GROUP BY id ")
+
+hist(tmp2$expected_weight_loss_rate)
+
+
 ```
 
 `r (count(distinctId) - count(tmp1))/count(distinctId)`% of user have incorrect goal weight or first weight.
 
+```{r}
+rm(tmp1)
+```
 
 Some of the goal weight data is not reasonable. Do we have any requirement on the 'goal weight' when member join into the program?
         
 ##5. Weight record
 ```{r echo=FALSE}
-tmp2 <- sqldf("SELECT count(*) FROM data WHERE dates > '1918-01-01' and dates < '2018-01-01'")
+tmp1 <- sqldf("SELECT count(*) FROM data WHERE weight > 10 and weight < 1000")
+tmpk <- sqldf("SELECT count(*) FROM data WHERE weight >= 1000")
+tmpk2 <- sqldf("SELECT count(*) FROM data WHERE weight <= 10")
+tmpk2 <- sqldf("SELECT count(*) FROM data WHERE weight * 1 = weight ")
+
+
+u <- sqldf("SELECT weight FROM data")
+notNum <- is.na( as.numeric(data$weight) )
+sum(notNum)
+
 ```
-`r tmp2/count(data)`% of records contains weight data.
+`r tmp1/count(data)`% of records contains reasonable weight data.
 
-MISSING COMMENT HERE.
+1. We are using weight > 10 && weight < 500 to select correct data. Does this work? Is there any case member has weight higher than 500?
 
-
-
-
+# 
 
 
+## 
+```{r}
+# tmp1 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight) as expected_weight_loss, (first_weight - weight)/3 as progress FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and months = 3 ")
+# 
+# tmp2 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight) as expected_weight_loss, (first_weight - weight)/6 as progress FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and months = 6 ")
+#  
+# tmp3 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight) as expected_weight_loss, (first_weight - weight)/9 as progress FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and months = 9 ")
+#  
+# tmp4 <- sqldf("SELECT id,first_weight, goal_weight, (first_weight - goal_weight) as expected_weight_loss, (first_weight - weight)/12 as progress FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and months = 12 ")
+
+tmp1 <- sqldf("SELECT id, gender, max(months) as quit_month, min(weight) as best_weight, (first_weight - goal_weight) as expected_weight_loss FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and weight > 10 and weight < 500 and (gender = 'male' or gender = 'female') GROUP BY id")
+scatter.smooth(x=tmp1$expected_weight_loss, y=tmp1$quit_month)
+
+tmp1$expected_weight_loss = cut( tmp1$expected_weight_loss, breaks = seq(0, 150, by = 10))
+ggplot(tmp1, aes(y=tmp1$quit_month, x=tmp1$expected_weight_loss, fill = tmp1$gender), position = 'dodge')+geom_boxplot()
+
+
+```
+
+
+## Success rate
+```{r}
+tmp1 <- sqldf("SELECT id, gender, max(months) as quit_month, min(weight) <= goal_weight as success, (first_weight - goal_weight) as expected_weight_loss FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and weight > 10 and weight < 500 and (gender = 'male' or gender = 'female') GROUP BY id")
+sum(tmp1$success)/count(tmp1)
+
+tmp2 <- sqldf("SELECT id, gender, max(months) as quit_month, min(weight) <= goal_weight * 1.1 as success, (first_weight - goal_weight) as expected_weight_loss FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and weight > 10 and weight < 500 and (gender = 'male' or gender = 'female') GROUP BY id")
+sum(tmp2$success)/count(tmp2)
+
+tmp3 <- sqldf("SELECT id, gender, max(months) as quit_month, min(weight) <= first_weight * 0.9 as success, (first_weight - goal_weight) as expected_weight_loss FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and weight > 10 and weight < 500 and (gender = 'male' or gender = 'female') GROUP BY id")
+sum(tmp3$success)/count(tmp3)
+
+
+
+
+```
+
+## for people successfully reach their goal
+```{r}
+
+tmp4 <- sqldf("SELECT id, gender, min(months) as first_month_reach_goal, (first_weight - goal_weight) as expected_weight_loss, first_weight FROM data WHERE goal_weight > 10 and goal_weight < 500 and first_weight >= goal_weight and weight > 10 and weight < 500 and (gender = 'male' or gender = 'female') and weight <= goal_weight GROUP BY id")
+
+hist(tmp4$first_month_reach_goal, breaks = seq(0, 55, by = 1) )
+
+tmp5 <- sqldf("SELECT a.id, a.gender, a.quit_month, b.first_month_reach_goal, b.expected_weight_loss, b.first_weight FROM tmp1 a join tmp4 b on a.id = b.id")
+scatter.smooth(x=tmp5$first_month_reach_goal, y=tmp5$quit_month)
+
+ggplot(tmp5, aes(y=tmp5$quit_month, x=factor(tmp5$first_month_reach_goal)), position = 'dodge')+geom_boxplot()
+
+hist(tmp5$quit_month - tmp5$first_month_reach_goal, breaks = seq(0, 55, by = 1))
+k1 <- tmp5$quit_month
+k2 <- tmp5$first_month_reach_goal
+k3 <- k1 - k2
+table(k3)
+hist(k3, breaks = seq(0, 55, by = 1))
+ggplot(tmp5, aes(y=tmp5$quit_month - tmp5$first_month_reach_goal, x=factor(tmp5$first_month_reach_goal)), position = 'dodge')+geom_boxplot()
+
+ggplot(tmp5, aes(y=tmp5$quit_month - tmp5$first_month_reach_goal, x=factor(round_any(tmp5$expected_weight_loss, 10)), position = 'dodge'))+geom_boxplot()
+
+ggplot(tmp5, aes(y=tmp5$quit_month - tmp5$first_month_reach_goal, x=factor(round_any(tmp5$first_weight,50)), position = 'dodge'))+geom_boxplot()
+
+```

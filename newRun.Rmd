@@ -1,0 +1,129 @@
+---
+title: "Test"
+author: "Runan Yao"
+date: "March 28, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source("Libraries.R")
+library(RMySQL)
+con <- dbConnect(MySQL(),
+    user = DB_USERNAME,
+    password = DB_PASSWORD,
+    host = DB_HOSTNAME,
+    dbname= DB_SCHEMA)
+```
+
+1. How many user having useful weight data in first 6 month?
+We are predicting WL after 3, 6 month. So it is important to know the proportion our data covers.  
+
+1.1 pulling Data
+
+```{r}
+options(sqldf.driver = "SQLite") 
+weightloss_daily_track <- 
+  dbGetQuery(conn = con, statement = "
+Select user_id, measureDay, min(weightloss) as weightloss, firstweight
+From 
+( Select a.user_id, firstweight-weight as weightloss, firstweight, datediff(date_recorded, firstdate) as measureDay
+from device_weight a join 
+	(Select user_id, min(date_recorded) as firstdate, weight as firstweight
+	from device_weight
+    group by user_id
+	) b on a.user_id = b.user_id
+where b.firstdate > '2016-01-01' and b.firstdate < '2017-01-01'
+) k
+group by user_id, measureDay")
+
+count(weightloss_daily_track)
+# '20537' member are in this data
+summary(weightloss_daily_track)
+boxplot(weightloss~measureDay, data=weightloss_daily_track, outline=FALSE)
+weightloss_daily_track$measureDay = weightloss_daily_track$measureDay + 1
+quantile(weightloss_daily_track$weightloss/weightloss_daily_track$measureDay, c(.05, .5, .95)) 
+
+Quantiles.We.Need <- NULL
+
+for(i in 1:400){
+  Quantiles.We.Need <- rbind(Quantiles.We.Need, quantile(weightloss_daily_track[weightloss_daily_track$measureDay == i,]$weightloss, c(.25, .5, .95)))
+}
+plot(0,0, xlim=c(1,400), ylim=c(0,40))
+lines(Quantiles.We.Need[,1])
+lines(Quantiles.We.Need[,2])
+lines(Quantiles.We.Need[,3])
+
+uid <- unique(weightloss_daily_track$user_id)
+lowestDay <- NULL
+for(i in 1:length(uid)){
+  k = weightloss_daily_track[weightloss_daily_track$user_id == uid[i],]
+  lowestDay <- rbind(lowestDay, k[which.max(k$weightloss),]$measureDay)
+}
+
+boxplot(lowestDay, ylim = c(0,300))
+plot(table(lowestDay), xlim = c(0,300))
+summary(lowestDay)
+
+
+```
+
+we only care the first 180 days.
+
+```{r}
+firstSix <- weightloss_daily_track[weightloss_daily_track$measureDay < 180,]
+boxplot(weightloss~measureDay, data=firstSix, outline=FALSE)
+temp <- firstSix[,c("user_id","measureDay")]
+require(data.table)
+DT_byDay=as.data.table(temp)
+temp_byDay <- DT_byDay[,.SD[which.max(measureDay)],by=user_id]
+colnames(temp_byDay) <- c("user_id", "maxMeasureDay")
+tmp_id_count <- data.frame( table(temp$user_id) )
+
+hist(tmp_id_count$Freq)
+```
+
+
+```{r}
+temp$measureDay = ceiling(temp$measureDay/7)
+temp2 <- unique(temp)
+tmp_id_count2 <- data.frame( table(temp2$user_id) )
+
+hist(tmp_id_count2$Freq,breaks = 27)
+
+```
+
+
+According to the histgrams above, weekly measure is more useful. 
+
+```{r}
+colnames(tmp_id_count2) <- c("user_id","measure count")
+temp3 <- firstSix[,c("user_id","weightloss")]
+require(data.table)
+DT=as.data.table(temp3)
+temp4 <- DT[,.SD[which.max(weightloss)],by=user_id]
+colnames(temp4) <- c("user_id","maxWL")
+
+
+mergeData <- merge(tmp_id_count2, temp4, by="user_id")
+colnames(mergeData) <- c("user_id","measureCount", "maxWL")
+
+fit <- lm(maxWL~measureCount, data = mergeData)
+summary(fit)
+plot(fit)
+
+scatter.smooth(x=mergeData$measureCount, y=mergeData$maxWL, main="maxWL ~ measureCount", ylim=range(0,100))
+
+colnames(tmp_id_count) <- c("user_id","dayCount")
+mergeData_byDay <- merge(tmp_id_count, temp4, by="user_id")
+
+fit2 <- lm(maxWL~dayCount, data = mergeData_byDay)
+summary(fit2)
+plot(fit2)
+
+```
+
+

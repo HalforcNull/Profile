@@ -10,24 +10,6 @@ dat_long_dev <- dat_long
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # PLOTS #
 
 survival01 <- survfit(Surv(month, s) ~ 1, data=surv_dev)
@@ -54,18 +36,6 @@ png('surv.png',width=8, height=5, units='in', res=300)
 		legend.position="right"
 	)
 dev.off()
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 summaryBy(month ~ s, surv_dev, FUN=c(mean,length))
@@ -181,39 +151,6 @@ plot(surv_dev[,c(3,5:11,20,21)])
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #survival model
 # gender, age, marital_status, first_weight, start_bmi, med_total, med_indicator,
 #     med_blood_pressure, med_antidepressant, med_cholesterol, med_sleep, med_diabetes,
@@ -269,11 +206,6 @@ summary(coxph(Surv(month, s) ~ age + marital_status2 + start_month + start_bmi +
 AIC(coxph(Surv(month, s) ~ age + marital_status2 + start_month + start_bmi + gender, data = surv_dev, x = TRUE) )
 Anova(coxph(Surv(month, s) ~ age + marital_status2 + start_month + start_bmi + gender, data = surv_dev, x = TRUE) )
 
-
-
-
-
-
 # #alternatively use step() 
 # surv01 <- coxph(Surv(month, s) ~ age + marital_status2 + start_month + start_bmi + gender, data = surv_dev, x = TRUE)
 # results.step <- step(surv01)
@@ -309,54 +241,8 @@ survFit04$coef
 AIC(survFit04)
 Anova(survFit04)
 
-
-
-
-
-
 ## save model
 save(survFit04, file="survFit04.rda")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

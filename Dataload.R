@@ -25,7 +25,7 @@ userinfo <- dbGetQuery(conn = con, statement =
                         last_login, promo_code, physician_referral, other_referral, is_first_time, is_coach, is_verified, emr_patient_no,
                         hl_connection,user_disable_hl,opt_research,opt_email,homestore,lead_source,membership_purchased_date,crm_id,pos_id
                 FROM userinfo a INNER JOIN userinfo_groups b on a.id =b.userinfo_id 
-                WHERE b.group_id = 5 and a.date_added > '2014-01-01';
+                WHERE b.group_id = 5 and a.date_added > '2014-01-01' and a.date_added < '2018-03-01';
                 ")   
 
 cat('user info has been loaded. \r\n')
