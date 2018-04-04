@@ -12,13 +12,13 @@ weightloss_daily_track <-
   dbGetQuery(conn = con, statement = "
              Select user_id, measureDay, min(weightloss) as weightloss, firstweight
              From 
-             ( Select a.user_id, firstweight-weight as weightloss, firstweight, datediff(date_recorded, firstdate) as measureDay
+             ( Select a.user_id, firstweight-weight as weightloss, firstweight, datediff(date_recorded, firstdate) as measureDay, firstdate
              from device_weight a join 
              (Select user_id, min(date_recorded) as firstdate, weight as firstweight
              from device_weight
              group by user_id
              ) b on a.user_id = b.user_id
-             where b.firstdate > '2016-01-01' and b.firstdate < '2017-01-01'
+             where b.firstdate > '2016-01-01' and b.firstdate < '2017-06-01'
              ) k
              group by user_id, measureDay")
 
