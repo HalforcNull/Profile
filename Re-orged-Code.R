@@ -22,6 +22,18 @@ weightloss_daily_track <-
              ) k
              group by user_id, measureDay")
 
+#save(weightloss_daily_track, file = "weightloss_daily_track.rda")
+
+activity_daily_track <-
+  dbGetQuery(conn = con, statement = "
+            SELECT activity_type_id, activity_intensity_id, user_id, duration, date_added
+            FROM activity
+            WHERE id_deleted = 0 and date_added > '2016-01-01' and date_added < '2017-06-01'") 
+
+
+#save(activity_daily_track, file = "activity_daily_track.rda")
+
+
 
 
 firstSix <- weightloss_daily_track[weightloss_daily_track$measureDay < 180,]
@@ -61,7 +73,55 @@ userinfo <-
                      
              
 
+source("Libraries.R")
+tmp1 <- sqldf("Select * from userinfo a join weightloss_daily_track b on a.id = b.user_id",drv="SQLite")
+
+uid.in.userinfo <- unique(userinfo$id)
+k <- uid.in.userinfo
+userinfo.missed.uid.1 <- setdiff(as.numeric(uid.in.userinfo), uid)
+userinfo.missed.uid.2 <- setdiff(uid, as.numeric(uid.in.userinfo))
+length(userinfo.missed.uid.2)
+userinfo.missed.uid.2
 
 
 
 
+
+
+#######################################################################################################
+##############################       Part 2. Create data table           ##############################
+#######################################################################################################
+
+firstSix <- weightloss_daily_track[weightloss_daily_track$measureDay < 180,]
+
+df <- data.frame(matrix(unlist(seq(from = 1, to = 27, by = 1)), nrow=27, byrow=T))
+colnames(df) <- c("week")
+
+my.wl.data.table <-sqldf( "SELECT a.user_id, b.week, a.avgWL, a.varWL, measureCount
+FROM
+df b 
+left join
+(
+  SELECT user_id, weekCount, avg(weightloss) as avgWL, VARIANCE(weightloss) as varWL, count(*) as measureCount FROM
+  ( Select user_id, floor(measureDay/7)+1 as weekCount, weightloss FROm firstSix )
+  GROUP BY
+  user_id,
+  weekCount
+) a on b.week=a.weekCount ORDER BY user_id", drv="SQLite")
+
+#TESTCODE: k <- my.wl.data.table[my.wl.data.table$user_id == 2613,]
+#k <- my.wl.data.table[my.wl.data.table$user_id == 2613 & my.wl.data.table$week == 3,c(3,4,5)]
+
+k <- list()
+for(i in 1:27){
+  tempt <- my.wl.data.table[my.wl.data.table$user_id == 2613 & my.wl.data.table$week == i,c(3,4,5)]
+  if(length(tempt[,1])==0)
+  {
+    tempt =  t(c(NA,NA,NA))
+    #rownames(tempt) <- c("avgWL","varWL","measureCount")
+  }
+  print(tempt)
+  ##https://www.rdocumentation.org/packages/rlist/versions/0.4.6.1/topics/list.append
+  
+  k.append(unlist(tempt[1,], use.names = FALSE) )
+}

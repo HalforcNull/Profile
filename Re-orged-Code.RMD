@@ -1,0 +1,30 @@
+
+userinfo contains, weight measure does not contain uid:
+```{r}
+userinfo.missed.uid.1
+```
+
+weight measure contains, userinfo does not contain:
+
+```{r}
+userinfo.missed.uid.2
+```
+
+raw data, uid count
+```{r}
+length(uid.in.userinfo)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
